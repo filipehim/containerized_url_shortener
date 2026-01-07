@@ -1,0 +1,54 @@
+# --- Python / FastAPI ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+*.egg
+*.log
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Poetry
+poetry.lock
+
+# --- IDEs / Editors ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+
+# --- Docker ---
+# Ignore local volumes or temp files
+docker-compose.override.yml
+*.pid
+
+# --- Nginx ---
+# Logs and temp files
+nginx/logs/
+nginx/temp/
+
+# --- MongoDB ---
+# Local database dumps
+dump/
+*.bson
+*.json
+
+# --- Tests ---
+.coverage
+htmlcov/
+.tox/
+pytest_cache/
+.cache/
+
+# --- Misc ---
+*.bak
+*.tmp

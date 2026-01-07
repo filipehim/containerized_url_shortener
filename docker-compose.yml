@@ -1,0 +1,29 @@
+services:
+  backend:
+    build: ./shortener_backend
+    container_name: fastapi_backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/shortener
+
+  mongodb:
+    image: mongo:6.0
+    container_name: mongo_db
+    ports: 
+      - "4000:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  nginx: 
+    build: ./shortener_frontend_nginx
+    container_name: nginx_proxy 
+    depends_on: 
+      - backend 
+    ports: 
+      - "80:80"
+
+volumes:
+  mongo_data:

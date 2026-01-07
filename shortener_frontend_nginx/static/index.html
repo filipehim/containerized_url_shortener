@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>URL Shortener</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f4f6f8, #dfe4ea);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #fff;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+            width: 520px;
+            text-align: center;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        h1 {
+            margin-bottom: 1rem;
+            color: #2c3e50;
+            font-size: 1.8em;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+        button {
+            padding: 0.9rem 1.4rem;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            display: none; /* inicialmente oculto */
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(0, 123, 255, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            font-weight: bold;
+            color: #007bff;
+            word-break: break-word;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        .short-url {
+            font-size: 1.1em;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .copy-btn {
+            margin-top: 0.8rem;
+            padding: 0.6rem 1rem;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .copy-btn:hover {
+            background: #0056b3;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>URL Shortener</h1>
+        <form id="urlForm">
+            <input type="text" id="urlInput" placeholder="Enter the full URL." required>
+            <button type="submit">Shorten</button>
+        </form>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('urlForm');
+        const resultDiv = document.getElementById('result');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = document.getElementById('urlInput').value;
+
+            try {
+                const response = await fetch('/shorten', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error shortening URL');
+                }
+
+                const data = await response.json();
+
+                // Mostra o card apenas quando houver resposta
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `
+                    <p>Your shortened URL:</p>
+                    <a href="${data.shortUrl}" target="_blank" class="short-url">${data.shortUrl}</a>
+                    <br>
+                    <button class="copy-btn" onclick="navigator.clipboard.writeText('${data.shortUrl}')">Copy</button>
+                `;
+            } catch (error) {
+                resultDiv.style.display = 'block';
+                resultDiv.textContent = error.message;
+            }
+        });
+    </script>
+</body>
+</html>
